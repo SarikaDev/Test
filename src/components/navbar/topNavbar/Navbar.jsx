@@ -24,7 +24,7 @@ const Navbar = ({ setIsOpen }) => {
   const handleImageClick = useCallback(() => {}, []);
 
   return (
-    <AppBar position="fixed" width={1} sx={{ zIndex: 999999 }}>
+    <AppBar position="fixed" width={1} sx={{ zIndex: 5555 }}>
       <Toolbar>
         {!isLarge && (
           <Tooltip title="Open Navigation">

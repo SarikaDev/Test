@@ -10,11 +10,6 @@ import moment from "moment";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { Box } from "@mui/system";
-import InputField from "../../../components/global/Input";
-import Autocomplete from "../../../components/global/AutoComplete";
-import Text from "../../../components/global/TextField";
-import { toast } from "react-toastify";
 import FilterCard from "../../../Pages/Global/FilterCard";
 const Card1 = ({
   setFromDate,
