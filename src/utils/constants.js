@@ -8,10 +8,16 @@ const PATHS = {
   Ports: {
     dashboard: "/dashboard",
     userManagement: {
-      root: "userManagement",
+      root: "/userManagement",
       updateUser: "/userManagement/updateUser",
       createUser: "/userManagement/createUser",
       usersList: "/userManagement/usersList",
+    },
+    datasets: {
+      root: "/datasets",
+      registrations: "/datasets/registrations",
+      users: "/datasets/users",
+      auditTrails: "/datasets/auditTrails",
     },
   },
 };
@@ -28,5 +34,7 @@ export const URL = {
     district: "/profile/customer/district",
   },
 };
+
+export const SM_WIDTH = 1100;
 
 export default PATHS;

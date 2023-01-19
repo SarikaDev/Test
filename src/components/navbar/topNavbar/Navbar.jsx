@@ -8,14 +8,15 @@ import logo from "../../../assets/BoA logo.png";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import { styled, Tooltip, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import PATHS from "../../../utils/constants";
+import PATHS, { SM_WIDTH } from "../../../utils/constants";
 const Img = styled("img")(() => ({
   width: "208px",
   height: "51px",
   cursor: "pointer",
 }));
-const Top = ({ setIsOpen }) => {
-  const isLarge = useMediaQuery(`(min-width:1100px)`);
+const Navbar = ({ setIsOpen }) => {
+  const isLarge = useMediaQuery(`(min-width:${SM_WIDTH}px)`);
+
   const toggleNavbar = useCallback(() => {
     setIsOpen(prev => !prev);
   }, [setIsOpen]);
@@ -23,10 +24,7 @@ const Top = ({ setIsOpen }) => {
   const handleImageClick = useCallback(() => {}, []);
 
   return (
-    <AppBar
-      position="sticky"
-      sx={{ zIndex: 9999999, display: "flex", flexWrap: "wrap" }}
-    >
+    <AppBar position="fixed" width={1} sx={{ zIndex: 999999 }}>
       <Toolbar>
         {!isLarge && (
           <Tooltip title="Open Navigation">
@@ -38,6 +36,7 @@ const Top = ({ setIsOpen }) => {
         <Box width={1}>
           <Img src={logo} alt="Boa_logo" onClick={() => handleImageClick()} />
         </Box>
+
         <Tooltip title="LogOut">
           <IconButton
             onClick={() => {
@@ -53,4 +52,4 @@ const Top = ({ setIsOpen }) => {
   );
 };
 
-export default Top;
+export default Navbar;

@@ -1,20 +1,12 @@
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 // import EditIcon from "@mui/icons-material/Edit";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import axios from "../../../api/axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card1 from "../../../sessions/userManagement/userList/Card1";
 import { URL } from "../../../utils/constants";
 import moment from "moment";
-import Card2 from "../../../sessions/userManagement/Card2";
+import Card2 from "../../../sessions/userManagement/userList/Card2";
 // import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
@@ -22,25 +14,19 @@ const UserList = () => {
   const [district, setDistrict] = useState([]);
   const [fromDate, setFromDate] = useState("2022-01-01");
   const [toDate, setToDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
-  const [pageSize, setPageSize] = useState(10);
-  const [filterOptions, setFilterOptions] = useState("mobileNumber");
-  const [branchValue, setBranchValue] = useState(null);
-  const [districtValue, setDistrictValue] = useState(null);
   const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
-  console.log("fromDate", moment(fromDate).format("YYYY-MM-DD"));
-  console.log("toDate", moment(toDate).format("YYYY-MM-DD"));
-  // const navigate = useNavigate();
-  const handleSearch = useCallback(() => {}, []);
-  const onChange = useCallback(e => {
-    setFilterOptions(e.target.value);
-  }, []);
+  // console.log("fromDate", moment(fromDate).format("YYYY-MM-DD"));
+  // console.log("toDate", moment(toDate).format("YYYY-MM-DD"));
 
-  // const [isLoading, setIsLoading] = useState(false);
   //! getBranches Request
   useEffect(() => {
-    axios.defaults.headers.common.authorization = `Bearer ${accessToken}`;
     axios
-      .get(URL.Ports.branch)
+      .get(URL.Ports.branch, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then(res => {
         const { labelValues } = res?.data?.data;
         setBranch(labelValues.sort((a, b) => a?.label.localeCompare(b?.label)));
@@ -53,7 +39,12 @@ const UserList = () => {
   //! getDistricts Request
   useEffect(() => {
     axios
-      .get(URL.Ports.district)
+      .get(URL.Ports.district, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then(res => {
         const { labelValues } = res?.data?.data;
         setDistrict(labelValues.sort((a, b) => a.label.localeCompare(b.label)));
@@ -61,10 +52,10 @@ const UserList = () => {
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [accessToken]);
 
   return (
-    <Box width={"100%"}>
+    <Box>
       <Card1
         setFromDate={setFromDate}
         setToDate={setToDate}
@@ -80,7 +71,7 @@ const UserList = () => {
         // branch={branch}
         // district={district}
       />
-      <Card2 pageSize={pageSize} fromDate={fromDate} toDate={toDate} />
+      <Card2 fromDate={fromDate} toDate={toDate} />
     </Box>
   );
 };

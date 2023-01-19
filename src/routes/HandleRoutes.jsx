@@ -8,12 +8,19 @@ const PasswordPage = lazy(() => import("../Pages/AccessPoint/Password"));
 const FacePage = lazy(() => import("../Pages/AccessPoint/Face"));
 const MenuBar = lazy(() => import("../Pages/Global/MenuBar"));
 const DashboardPage = lazy(() => import("../Pages/Port/Dashboard/Dashboard"));
-const UserList = lazy(() => import("../Pages/Port/userManagement/UserList"));
+const UserList = lazy(() => import("../Pages/Port/UserManagement/UserList"));
 const CreateUser = lazy(() =>
-  import("../Pages/Port/userManagement/CreateUser"),
+  import("../Pages/Port/UserManagement/CreateUser"),
 );
 const UpdateUser = lazy(() =>
-  import("../Pages/Port/userManagement/UpdateUser"),
+  import("../Pages/Port/UserManagement/UpdateUser"),
+);
+const RegistrationsPage = lazy(() =>
+  import("../Pages/Port/Datasets/Registrations"),
+);
+const UsersPage = lazy(() => import("../Pages/Port/Datasets/Users"));
+const AuditTrailsPage = lazy(() =>
+  import("../Pages/Port/Datasets/AuditTrails"),
 );
 
 // const RouteArr = [
@@ -51,17 +58,27 @@ const HandleRoutes = () => (
     <Route path={PATHS.AccessPoint.face} element={<FacePage />} />
     <Route element={<MenuBar />}>
       <Route path={PATHS.Ports.dashboard} element={<DashboardPage />} />
-      <Route
-        path={PATHS.Ports.userManagement.usersList}
-        element={<UserList />}
-      />
+      <Route path={PATHS.Ports.userManagement.root} element={<UserList />} />
       <Route
         path={PATHS.Ports.userManagement.createUser}
         element={<CreateUser />}
       />
       <Route
-        path={PATHS.Ports.userManagement.updateUser}
+        path={`${PATHS.Ports.userManagement.root}/edit/:mobileNumber`}
         element={<UpdateUser />}
+      />
+      <Route
+        path={PATHS.Ports.datasets.registrations}
+        element={<RegistrationsPage />}
+      />
+      <Route
+        path={PATHS.Ports.datasets.registrations}
+        element={<RegistrationsPage />}
+      />
+      <Route path={PATHS.Ports.datasets.users} element={<UsersPage />} />
+      <Route
+        path={PATHS.Ports.datasets.auditTrails}
+        element={<AuditTrailsPage />}
       />
     </Route>
   </Routes>

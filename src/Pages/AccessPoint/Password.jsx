@@ -38,6 +38,9 @@ const Password = () => {
       setIsLoading(true);
       axios
         .post(`${URL.AccessPoint.password}${identityNumber}/token`, {
+          headers: {
+            "X-Client-Type": "WEB",
+          },
           credential: Password,
           credentialType: "PASSWORD",
         })
