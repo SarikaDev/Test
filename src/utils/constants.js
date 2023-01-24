@@ -19,6 +19,11 @@ const PATHS = {
       users: "/datasets/users",
       auditTrails: "/datasets/auditTrails",
     },
+    deviceManagement: {
+      root: "deviceManagement",
+      registrations: "deviceManagement/registrations",
+      Activation: "deviceManagement/activate-deActivate",
+    },
   },
 };
 

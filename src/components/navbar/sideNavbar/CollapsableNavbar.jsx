@@ -8,9 +8,10 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import Link from "../../global/Link";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 const CollapsableNavbar = ({ primary, links, root, icon, onClick }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -30,22 +31,27 @@ const CollapsableNavbar = ({ primary, links, root, icon, onClick }) => {
             primary={primary}
           />
           <IconButton>
-            {open ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+            {open ? <ChevronRightOutlinedIcon /> : <ExpandMore />}
           </IconButton>
         </ListItemButton>
       </Link>
       <Collapse in={open} timeout="auto">
         <List component="nav">
-          {links?.map(({ link, icon, title }, index) => (
+          {links?.map(({ link, title }, index) => (
             <React.Fragment key={index}>
               <Link to={link}>
                 <ListItemButton
                   onClick={onClick}
                   selected={link === location.pathname}
                 >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={title} />
+                  <ListItemText
+                    primary={title}
+                    sx={{ alignContent: "center" }}
+                  />
                 </ListItemButton>
+                {/* <ListItemIcon>
+                  <DoneIcon />
+                </ListItemIcon> */}
               </Link>
             </React.Fragment>
           ))}

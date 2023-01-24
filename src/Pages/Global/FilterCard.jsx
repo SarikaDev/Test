@@ -1,13 +1,60 @@
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Paper, Stack, Typography } from "@mui/material";
 import moment from "moment";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-toastify";
+import Autocomplete from "../../components/global/AutoComplete";
+import SelectField from "../../components/global/SelectField";
+import Text from "../../components/global/TextField";
 import Calendar from "./Calendar";
 
-const FilterCard = ({ setFromDate, setToDate, setMobileNumber }) => {
+const List = [
+  // { value: "name", label: "Name" },
+  { value: "mobileNumber", label: "Mobile Number" },
+  { value: "branch", label: "Branch" },
+  { value: "district", label: "District" },
+];
+const FilterCard = ({
+  setFromDate,
+  setToDate,
+  // setMobileNumber,
+  branch,
+  district,
+  branchValue,
+  setBranchValue,
+  setSearch,
+  selectValue,
+  setselectValue,
+}) => {
   const [fromDate2, setFromDate2] = useState("");
   const [toDate2, setToDate2] = useState("");
+  const [districtValue, setDistrictValue] = useState(null);
 
+  const handleSearchClick = useCallback(
+    value => {
+      setSearch(value);
+    },
+    [setSearch],
+  );
+
+  const handleSelectField = useCallback(
+    e => {
+      if (selectValue !== "branch") {
+        setBranchValue(null);
+      }
+      if (selectValue !== "district") {
+        setDistrictValue(null);
+      }
+      setselectValue(e.target.value);
+    },
+    [selectValue, setBranchValue, setselectValue],
+  );
+
+  // const handleMobileNumber = useCallback(
+  //   e => {
+  //     setMobileNumber(e.target.value);
+  //   },
+  //   [setMobileNumber],
+  // );
   const submitDate = useCallback(
     e => {
       e.preventDefault();
@@ -57,6 +104,47 @@ const FilterCard = ({ setFromDate, setToDate, setMobileNumber }) => {
           flexWrap="nowrap"
           padding={2}
         >
+          <Stack flexDirection="row">
+            <SelectField value={selectValue} onChange={handleSelectField}>
+              {List?.map(({ value, label }) => (
+                <MenuItem value={value} key={label}>
+                  {label}
+                </MenuItem>
+              ))}
+            </SelectField>
+            {selectValue === "mobileNumber" && (
+              <>
+                <Text label="Search Here" onChange={handleSearchClick} />
+                <Button variant="outlined" sx={{ ml: 1 }}>
+                  submit
+                </Button>
+              </>
+            )}
+            {selectValue === "branch" && (
+              <Autocomplete
+                options={branch}
+                label="Select By Branch"
+                value={branchValue}
+                setValue={setBranchValue}
+                getOptionLabel={option => option?.label}
+                isOptionEqualToValue={(option, value) =>
+                  option?.label === value?.label
+                }
+              />
+            )}
+            {selectValue === "district" && (
+              <Autocomplete
+                options={district}
+                label="Select By District"
+                value={districtValue}
+                setValue={setDistrictValue}
+                getOptionLabel={option => option?.label}
+                isOptionEqualToValue={(option, value) =>
+                  option?.label === value?.label
+                }
+              />
+            )}
+          </Stack>
           <Box>
             <Calendar
               fromDate2={fromDate2}

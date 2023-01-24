@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Box,
   Button,
   CircularProgress,
   Fade,
@@ -12,72 +12,65 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Tooltip,
   Typography,
-  Box,
-  TablePagination,
 } from "@mui/material";
+import React, { useCallback, useState } from "react";
 import { Worker } from "@react-pdf-viewer/core";
-import "jspdf-autotable";
-import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import axios from "../../../api/axios";
 import moment from "moment";
-import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
 
-const Card2 = ({ fromDate, toDate, selectValue, setSearch, search }) => {
-  const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
+const columns = [
+  { field: "deviceName", headerName: "DeviceName" },
+  { field: "requestType", headerName: "Request Type" },
+  { field: "status", headerName: "Status" },
+  { field: "statusReason", headerName: "Status Reason" },
+  { field: "requestedAt", headerName: "Requested By" },
+  { field: "requestedBy", headerName: "Requested At" },
+];
+
+const Card2 = ({ fromDate, toDate }) => {
   const navigate = useNavigate();
-  const [rows, setRows] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [pageSize, setPageSize] = useState(10);
-  const [totalSize, setTotalSize] = useState(0);
-  const [pageNumber, setPageNumber] = useState(0);
+  const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
 
-  const handleToggle = useCallback((index, passwordEnabled) => {
-    setRows(prev => {
-      const prevUserList = [...prev];
-      prevUserList[index].passwordEnabled = !passwordEnabled;
-      return prevUserList;
-    });
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalSize, setTotalSize] = useState(10);
+  const [pageSize, setPageSize] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [rows, setRows] = useState([]);
+  const handleToggle = useCallback(() => {}, []);
+  const submitPdf = useCallback(() => {}, []);
+  const handleChangePage = useCallback((_event, newPage) => {
+    setPageNumber(newPage);
   }, []);
 
-  const searchText = useMemo(
-    () => ({
-      ...(search && {
-        [selectValue]:
-          selectValue === "mobileNumber" ? `+251${search}` : search,
-      }),
-    }),
-    [search, selectValue],
-  );
+  const handleChangeRowsPerPage = useCallback(e => {
+    setPageSize(parseInt(e.target.value, 10));
+    setPageNumber(0);
+  }, []);
 
-  useEffect(() => {
-    setSearch("");
-  }, [selectValue, setSearch]);
-
-  const userList = useCallback(() => {
-    return axios.get("user", {
+  const deviceRegistrations = useCallback(() => {
+    return axios.get("/admin/devices", {
       headers: {
+        "content-type": "application/json",
         authorization: `Bearer ${accessToken}`,
       },
       params: {
-        pageSize,
-        pageNumber: pageNumber + 1,
-        ...(fromDate && {
-          fromLastUpdated: moment(fromDate).format("YYYY-MM-DD"),
-        }),
-        ...(toDate && {
-          toLastUpdated: moment(toDate).format("YYYY-MM-DD"),
-        }),
-        ...searchText,
+        from: !fromDate ? "2022-01-01" : moment(fromDate).format("YYYY-MM-DD"),
+        to: !toDate
+          ? moment(new Date()).format("YYYY-MM-DD")
+          : moment(toDate).format("YYYY-MM-DD"),
       },
     });
-  }, [accessToken, fromDate, pageNumber, pageSize, searchText, toDate]);
+  }, [accessToken, fromDate, toDate]);
+
   useEffect(() => {
     setIsLoading(true);
-    userList()
+    deviceRegistrations()
       .then(res => {
         setIsLoading(false);
         const { totalSize } = res.data.data;
@@ -88,35 +81,8 @@ const Card2 = ({ fromDate, toDate, selectValue, setSearch, search }) => {
         console.error(err);
         setIsLoading(false);
       });
-  }, [userList]);
+  }, [deviceRegistrations]);
 
-  const columns = [
-    { field: "displayName", headerName: "Name" },
-    { field: "mobileNumber", headerName: "Mobile Number" },
-    { field: "role", headerName: "Roles" },
-    { field: "branchName", headerName: "Branch Name" },
-    { field: "status", headerName: "Status" },
-    { field: "lastLogin", headerName: "Last Login" },
-    { field: "createdAt", headerName: "Created Date" },
-    { field: "createdBy", headerName: "Created By" },
-    { field: "updatedAt", headerName: "Last Modified Date" },
-    { field: "updatedBy", headerName: "Last Modified By" },
-  ];
-
-  const handleChangePage = useCallback((_event, newPage) => {
-    setPageNumber(newPage);
-  }, []);
-
-  const handleChangeRowsPerPage = useCallback(e => {
-    setPageSize(parseInt(e.target.value, 10));
-    setPageNumber(0);
-  }, []);
-
-  const submitPdf = useCallback(e => {
-    e.preventDefault();
-    const pdf = new jsPDF("landscape");
-    console.log("pdf", pdf);
-  }, []);
   return (
     <Stack
       component={Paper}
@@ -209,7 +175,7 @@ const Card2 = ({ fromDate, toDate, selectValue, setSearch, search }) => {
                             );
                           }}
                         >
-                          <EditIcon />
+                          {/* <EditIcon /> */}
                         </IconButton>
                       </Tooltip>
                     </TableCell>

@@ -12,7 +12,7 @@ const StyledInput = styled(MuiSelect)(({ theme }) => ({
   textAlign: "center",
 }));
 
-const InputField = ({ value, onChange, children, ...other }) => {
+const SelectField = ({ value, onChange, children, ...other }) => {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -31,4 +31,4 @@ const InputField = ({ value, onChange, children, ...other }) => {
   );
 };
 
-export default InputField;
+export default SelectField;

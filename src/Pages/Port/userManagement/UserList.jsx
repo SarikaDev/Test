@@ -1,78 +1,58 @@
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-// import EditIcon from "@mui/icons-material/Edit";
-
 import axios from "../../../api/axios";
-import React, { useEffect, useState } from "react";
-import Card1 from "../../../sessions/userManagement/userList/Card1";
-import { URL } from "../../../utils/constants";
-import moment from "moment";
-import Card2 from "../../../sessions/userManagement/userList/Card2";
-// import { useNavigate } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import GlobalTheme from "../../../components/theme/GlobalTheme";
+import { useLocation } from "react-router-dom";
 
+const filterChannel = [
+  { value: "name", label: "Name" },
+  { value: "mobileNumber", label: "Mobile Number" },
+  { value: "branchId", label: "Branch" },
+  { value: "district", label: "District" },
+];
+
+const tableHeading = [
+  { field: "displayName", headerName: "Name" },
+  { field: "mobileNumber", headerName: "Mobile Number" },
+  { field: "role", headerName: "Roles" },
+  { field: "branchName", headerName: "Branch Name" },
+  { field: "status", headerName: "Status" },
+  { field: "lastLogin", headerName: "Last Login" },
+  { field: "createdAt", headerName: "Created Date" },
+  { field: "createdBy", headerName: "Created By" },
+  { field: "updatedAt", headerName: "Last Modified Date" },
+  { field: "updatedBy", headerName: "Last Modified By" },
+];
 const UserList = () => {
-  const [branch, setBranch] = useState([]);
-  const [district, setDistrict] = useState([]);
-  const [fromDate, setFromDate] = useState("2022-01-01");
-  const [toDate, setToDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
   const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
-  // console.log("fromDate", moment(fromDate).format("YYYY-MM-DD"));
-  // console.log("toDate", moment(toDate).format("YYYY-MM-DD"));
+  const location = useLocation();
+  console.log("location", location);
+  const [selectedValue, setselectedValue] = useState("mobileNumber");
+  const [mobileNumber, setMobileNumber] = useState("");
 
-  //! getBranches Request
-  useEffect(() => {
-    axios
-      .get(URL.Ports.branch, {
+  const getUsersList = useCallback(
+    params => {
+      return axios.get("user", {
         headers: {
-          "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
         },
-      })
-      .then(res => {
-        const { labelValues } = res?.data?.data;
-        setBranch(labelValues.sort((a, b) => a?.label.localeCompare(b?.label)));
-      })
-      .catch(err => {
-        console.error(err);
+        params,
       });
-  }, [accessToken]);
-
-  //! getDistricts Request
-  useEffect(() => {
-    axios
-      .get(URL.Ports.district, {
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(res => {
-        const { labelValues } = res?.data?.data;
-        setDistrict(labelValues.sort((a, b) => a.label.localeCompare(b.label)));
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }, [accessToken]);
+    },
+    [accessToken],
+  );
 
   return (
-    <Box>
-      <Card1
-        setFromDate={setFromDate}
-        setToDate={setToDate}
-        // filterOptions={filterOptions}
-        // branchValue={branchValue}
-        // setBranchValue={setBranchValue}
-        // districtValue={districtValue}
-        // setDistrictValue={setDistrictValue}
-        // handleSearch={handleSearch}
-        // onChange={onChange}
-        // fromDate={fromDate}
-        // toDate={toDate}
-        // branch={branch}
-        // district={district}
-      />
-      <Card2 fromDate={fromDate} toDate={toDate} />
-    </Box>
+    <GlobalTheme
+      title="Users"
+      filterChannel={filterChannel}
+      selectedValue={selectedValue}
+      setselectedValue={setselectedValue}
+      tableHeading={tableHeading}
+      apiProps={getUsersList}
+      mobileNumber={mobileNumber}
+      setMobileNumber={setMobileNumber}
+      root={location.pathname}
+    />
   );
 };
 

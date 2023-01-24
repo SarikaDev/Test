@@ -1,86 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
+import { Box, Paper, Stack, Typography } from "@mui/material";
+import React, { useCallback, useState } from "react";
 import moment from "moment";
 import { toast } from "react-toastify";
 import Autocomplete from "../../../components/global/AutoComplete";
-import SelectField from "../../../components/global/SelectField";
-import Text from "../../../components/global/TextField";
 import Calendar from "../../../Pages/Global/Calendar";
-import { Box, Button, MenuItem, Paper, Stack, Typography } from "@mui/material";
-import axios from "../../../api/axios";
-
-const List = [
-  { value: "name", label: "Name" },
-  { value: "mobileNumber", label: "Mobile Number" },
-  { value: "branchId", label: "Branch" },
-  { value: "district", label: "District" },
-];
-const Card1 = ({
-  setFromDate,
-  setToDate,
-  branch,
-  district,
-  districtValue,
-  setDistrictValue,
-  selectValue,
-  setselectValue,
-  setSearch,
-}) => {
-  const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [name, setName] = useState("");
+const Card1 = ({ setFromDate, setToDate }) => {
   const [fromDate2, setFromDate2] = useState("");
   const [toDate2, setToDate2] = useState("");
-  const [displayName, setDisplayName] = useState([]);
-  const [branchValue, setBranchValue] = useState(null);
-
-  const handleMobileNumber = useCallback(e => {
-    setMobileNumber(e.target.value);
-  }, []);
-
-  //! displayNames Request
-
-  // const api = useCallback(() => {
-  //   return;
-  // }, [accessToken]);
-
-  useEffect(() => {
-    axios
-      .get("user", {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          pageSize: 10,
-          pageNumber: 1,
-          fromLastUpdated: "2022-01-01",
-          toLastUpdated: moment(new Date()).format("YYYY-MM-DD"),
-        },
-      })
-      .then(res => {
-        const data = res.data.data.content;
-        const name = data.map(el => el?.displayName);
-        setDisplayName(
-          [...new Set(name)]?.map(displayName => ({
-            label: displayName,
-            value: displayName,
-          })),
-        );
-      });
-  }, [accessToken]);
-
-  const handleSelectField = useCallback(
-    e => {
-      if (selectValue !== "branch") {
-        setBranchValue(null);
-      }
-      if (selectValue !== "district") {
-        setDistrictValue(null);
-      }
-      setselectValue(e.target.value);
-      setSearch("");
-    },
-    [selectValue, setBranchValue, setDistrictValue, setSearch, setselectValue],
-  );
 
   const submitDate = useCallback(
     e => {
@@ -103,11 +29,6 @@ const Card1 = ({
     [fromDate2, setFromDate, setToDate, toDate2],
   );
 
-  const handleSubmit = useCallback(() => {
-    if (mobileNumber) {
-      setSearch(mobileNumber);
-    }
-  }, [mobileNumber, setSearch]);
   return (
     <Box
       component={Paper}
@@ -137,7 +58,7 @@ const Card1 = ({
           flexWrap="nowrap"
           padding={2}
         >
-          <Stack flexDirection="row">
+          {/* <Stack flexDirection="row">
             <SelectField value={selectValue} onChange={handleSelectField}>
               {List?.map(({ value, label }) => (
                 <MenuItem value={value} key={label}>
@@ -193,7 +114,7 @@ const Card1 = ({
                 }
               />
             )}
-          </Stack>
+          </Stack> */}
           <Box>
             <Calendar
               fromDate2={fromDate2}

@@ -1,14 +1,48 @@
-import { Box } from "@mui/material";
-import React from "react";
-import Card1 from "../../../sessions/registrations/Card1";
-import Card2 from "../../../sessions/registrations/Card2";
+import { useCallback, useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "../../../api/axios";
+import GlobalTheme from "../../../components/theme/GlobalTheme";
+
+const filterChannel = [
+  { value: "branchId", label: "Branch" },
+  { value: "district", label: "District" },
+];
+
+const tableHeading = [
+  { field: "fullName", headerName: "FullName" },
+  { field: "mobileNumber", headerName: "Mobile Number" },
+  { field: "agentName", headerName: "Agent Name" },
+  { field: "adjudicatorName", headerName: "Adjudicator Name" },
+  { field: "status", headerName: "Status" },
+  { field: "createdAt", headerName: "Created Date" },
+];
 
 const Registrations = () => {
+  const location = useLocation();
+  const { accessToken } = JSON?.parse(localStorage?.getItem("Port"));
+  const [selectedValue, setselectedValue] = useState("branchId");
+  const getRegistrations = useCallback(
+    params => {
+      return axios.get("/admin/reporting/enrollments/list", {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        params,
+      });
+    },
+    [accessToken],
+  );
+
   return (
-    <Box>
-      <Card1></Card1>
-      <Card2></Card2>
-    </Box>
+    <GlobalTheme
+      title="Registrations"
+      filterChannel={filterChannel}
+      selectedValue={selectedValue}
+      setselectedValue={setselectedValue}
+      tableHeading={tableHeading}
+      apiProps={getRegistrations}
+      root={location.pathname}
+    />
   );
 };
 

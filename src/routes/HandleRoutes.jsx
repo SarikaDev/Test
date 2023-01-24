@@ -22,6 +22,12 @@ const UsersPage = lazy(() => import("../Pages/Port/Datasets/Users"));
 const AuditTrailsPage = lazy(() =>
   import("../Pages/Port/Datasets/AuditTrails"),
 );
+const DeviceRegistrationsPage = lazy(() =>
+  import("../Pages/Port/DeviceRegistrations/Registrations"),
+);
+const ActivationPage = lazy(() =>
+  import("../Pages/Port/DeviceRegistrations/Activation"),
+);
 
 // const RouteArr = [
 //   { path: PATHS.AccessPoint.login, element: <LoginPage /> },
@@ -53,6 +59,7 @@ const AuditTrailsPage = lazy(() =>
 const HandleRoutes = () => (
   <Routes>
     <Route path={PATHS.AccessPoint.login} element={<LoginPage />} />
+
     <Route path={PATHS.AccessPoint.loginTypes} element={<LoginTypesPage />} />
     <Route path={PATHS.AccessPoint.password} element={<PasswordPage />} />
     <Route path={PATHS.AccessPoint.face} element={<FacePage />} />
@@ -79,6 +86,14 @@ const HandleRoutes = () => (
       <Route
         path={PATHS.Ports.datasets.auditTrails}
         element={<AuditTrailsPage />}
+      />
+      <Route
+        path={PATHS.Ports.deviceManagement.registrations}
+        element={<DeviceRegistrationsPage />}
+      />
+      <Route
+        path={PATHS.Ports.deviceManagement.Activation}
+        element={<ActivationPage />}
       />
     </Route>
   </Routes>
